@@ -52,8 +52,8 @@ install:
 - source ~/.cargo/env || true
 
 script:
-- cargo test --verbose
-- cargo test --verbose --no-default-features
+- cargo -j1 test --verbose
+- cargo -j1 test --verbose --no-default-features
 
 before_deploy:
 - sh ci/before_deploy.sh
