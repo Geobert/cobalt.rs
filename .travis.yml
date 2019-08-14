@@ -4,6 +4,7 @@ language: rust
 env:
   global:
   - CRATE_NAME=cobalt
+  - MAKE_LIBSASS_JOBS=1
 
 matrix:
   include:
