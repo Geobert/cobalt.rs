@@ -16,4 +16,3 @@ jobs:
   steps:
   - template: install-rust.yml
   - script: cargo build --release --features "pagination-unstable"
-    displayName: Build with pagination
