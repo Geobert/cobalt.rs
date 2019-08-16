@@ -7,3 +7,13 @@ resources:
       type: github
       name: crate-ci/azure-pipelines
       endpoint: Azure
+      
+jobs:
+- job:
+  displayName: Build binary
+  pool:
+    vmImage: ubuntu-16.04
+  steps:
+  - template: install-rust.yml
+  - script: cargo build --release --features "pagination-unstable"
+    displayName: Build with pagination
