@@ -2,7 +2,6 @@ stages:
   - stage: Check
     jobs:
       job: check
-        displayName: cargo check
       pool:
         vmImage: ubuntu-16.04
       steps:
@@ -13,12 +12,11 @@ stages:
     dependsOn: check
     jobs:
       job: test
-        displayName: cargo test
       pool:
         vmImage: ubuntu-16.04
       steps:
       - template: azure/install-rust.yml@templates
-      - script: cargo test --features "pagination-unstable"
+      - script: cargo test --features "pagination-unstable"
         displayName: Test pagination-unstable
   - stage: Release
     dependsOn: test
