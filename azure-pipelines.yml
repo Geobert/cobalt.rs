@@ -1,7 +1,7 @@
 stages:
   - template: azure/stages.yml@templates
     parameters:
-      test_features: <string> = 'pagination-unstable'
+      test_features: 'pagination-unstable'
       minrust: false
   - stage: Release
     condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
