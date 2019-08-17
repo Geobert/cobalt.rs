@@ -41,7 +41,7 @@ stages:
         displayName: Tarball assets
         condition: ne( variables['Agent.OS'], 'Windows_NT' )
         inputs:
-          rootFolderOrFile: '$(Build.BinariesDirectory)/cobalt.rs
+          rootFolderOrFile: '$(Build.BinariesDirectory)/cobalt.rs'
           archiveType: 'tar'
           tarCompression: 'gz'
           archiveFile: '$(Build.ArtifactStagingDirectory)/cobalt.rs.tar.gz'
