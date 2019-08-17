@@ -1,20 +1,32 @@
 stages:
-  - template: azure/stages.yml@templates
-    parameters:
-      test_features: 'pagination-unstable'
-      minrust: false
+  - stage: Check
+    jobs:
+      job: check
+        displayName: cargo check
+      pool:
+        vmImage: ubuntu-16.04
+      steps:
+      - template: azure/install-rust.yml@templates
+      - script: cargo check --features "pagination-unstable"
+        displayName: Check pagination-unstable
+  - stage: Test
+    dependsOn: check
+    jobs:
+      job: test
+        displayName: cargo test
+      pool:
+        vmImage: ubuntu-16.04
+      steps:
+      - template: azure/install-rust.yml@templates
+      - script: cargo test --features "pagination-unstable"
+        displayName: Test pagination-unstable
   - stage: Release
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+    dependsOn: test
+    condition: succeeded() #startsWith(variables['Build.SourceBranch'], 'refs/tags/')
     jobs:
     - job:
-      strategy:
-        matrix:
-          linux:
-            imageName: 'ubuntu-16.04'
-            target: 'x86_64-unknown-linux-gnu'
-            crate_name: cobalt
       pool:
-        vmImage: $(imageName)
+        vmImage: ubuntu-16.04
       steps:
       - template: azure/install-rust.yml@templates
       - script: |
