@@ -4,6 +4,7 @@ language: rust
 env:
   global:
   - CRATE_NAME=cobalt
+  - MAKE_LIBSASS_JOBS=1
 
 matrix:
   include:
@@ -51,8 +52,8 @@ install:
 - source ~/.cargo/env || true
 
 script:
-- cargo test --verbose
-- cargo test --verbose --no-default-features
+- cargo test -j1 --verbose
+- cargo test -j1 --verbose --no-default-features
 
 before_deploy:
 - sh ci/before_deploy.sh

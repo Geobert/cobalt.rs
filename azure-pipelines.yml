@@ -1,0 +1,68 @@
+stages:
+  - stage: Check
+    jobs:
+    - job: check
+      pool:
+        vmImage: ubuntu-16.04
+      steps:
+      - template: azure/install-rust.yml@templates
+      - script: cargo check --features "pagination-unstable"
+        displayName: Check pagination-unstable
+  - stage: Test
+    dependsOn: Check
+    jobs:
+    - job: test
+      pool:
+        vmImage: ubuntu-16.04
+      steps:
+      - template: azure/install-rust.yml@templates
+      - script: cargo test --features "pagination-unstable"
+        displayName: Test pagination-unstable
+  - stage: Release
+    dependsOn: Test
+    condition: succeeded() #startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+    jobs:
+    - job:
+      pool:
+        vmImage: ubuntu-16.04
+      steps:
+      - template: azure/install-rust.yml@templates
+      - script: |
+          cargo rustc --target $TARGET --release --bin $CRATE_NAME --features "pagination-unstable"
+        displayName: Build
+      - task: CopyFiles@2
+        displayName: Stage assets
+        condition: ne( variables['Agent.OS'], 'Windows_NT' )
+        inputs:
+          sourceFolder: '$(Build.SourcesDirectory)/target/$(TARGET)/release'
+          contents: $(crate_name)
+          targetFolder: '$(Build.BinariesDirectory)/'
+      - task: ArchiveFiles@2
+        displayName: Tarball assets
+        condition: ne( variables['Agent.OS'], 'Windows_NT' )
+        inputs:
+          rootFolderOrFile: '$(Build.BinariesDirectory)/$(crate_name)'
+          archiveType: 'tar'
+          tarCompression: 'gz'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(crate_name)-$(Build.SourceBranchName)-$(TARGET).tar.gz'
+      - task: GithubRelease@0
+        condition: ne( variables['Agent.OS'], 'Windows_NT' )
+        inputs:
+          gitHubConnection: 'Azure'
+          repositoryName: 'Geobert/cobalt.rs'
+          action: 'edit'
+          target: '$(build.sourceVersion)'
+          tagSource: 'manual'
+          tag: '$(Build.SourceBranchName)'
+          assets: '$(Build.ArtifactStagingDirectory)/$(crate_name)-$(Build.SourceBranchName)-$(TARGET).tar.gz'
+          title: '$(Build.SourceBranchName)'
+          assetUploadMode: 'replace'
+          addChangeLog: true
+   
+resources:
+  repositories:
+    - repository: templates
+      type: github
+      name: crate-ci/azure-pipelines
+      endpoint: Azure
+
