@@ -1,7 +1,7 @@
 stages:
   - stage: Check
     jobs:
-      job: check
+    - job: check
       pool:
         vmImage: ubuntu-16.04
       steps:
@@ -11,7 +11,7 @@ stages:
   - stage: Test
     dependsOn: check
     jobs:
-      job: test
+    - job: test
       pool:
         vmImage: ubuntu-16.04
       steps:
