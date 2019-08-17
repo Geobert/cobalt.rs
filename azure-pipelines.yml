@@ -9,7 +9,7 @@ stages:
       - script: cargo check --features "pagination-unstable"
         displayName: Check pagination-unstable
   - stage: Test
-    dependsOn: check
+    dependsOn: Check
     jobs:
     - job: test
       pool:
@@ -19,7 +19,7 @@ stages:
       - script: cargo test --features "pagination-unstable"
         displayName: Test pagination-unstable
   - stage: Release
-    dependsOn: test
+    dependsOn: Test
     condition: succeeded() #startsWith(variables['Build.SourceBranch'], 'refs/tags/')
     jobs:
     - job:
