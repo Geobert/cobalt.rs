@@ -35,13 +35,13 @@ stages:
         condition: ne( variables['Agent.OS'], 'Windows_NT' )
         inputs:
           sourceFolder: '$(Build.SourcesDirectory)/target/release'
-          contents: $(crate_name)
+          contents: cobalt
           targetFolder: '$(Build.BinariesDirectory)/'
       - task: ArchiveFiles@2
         displayName: Tarball assets
         condition: ne( variables['Agent.OS'], 'Windows_NT' )
         inputs:
-          rootFolderOrFile: '$(Build.BinariesDirectory)/cobalt.rs'
+          rootFolderOrFile: '$(Build.BinariesDirectory)/cobalt'
           archiveType: 'tar'
           tarCompression: 'gz'
           archiveFile: '$(Build.ArtifactStagingDirectory)/cobalt.rs.tar.gz'
