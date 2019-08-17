@@ -34,17 +34,17 @@ stages:
         displayName: Stage assets
         condition: ne( variables['Agent.OS'], 'Windows_NT' )
         inputs:
-          sourceFolder: '$(Build.SourcesDirectory)/target/$(TARGET)/release'
+          sourceFolder: '$(Build.SourcesDirectory)/target/release'
           contents: $(crate_name)
           targetFolder: '$(Build.BinariesDirectory)/'
       - task: ArchiveFiles@2
         displayName: Tarball assets
         condition: ne( variables['Agent.OS'], 'Windows_NT' )
         inputs:
-          rootFolderOrFile: '$(Build.BinariesDirectory)/$(crate_name)'
+          rootFolderOrFile: '$(Build.BinariesDirectory)/cobalt.rs
           archiveType: 'tar'
           tarCompression: 'gz'
-          archiveFile: '$(Build.ArtifactStagingDirectory)/$(crate_name)-$(Build.SourceBranchName)-$(TARGET).tar.gz'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/cobalt.rs.tar.gz'
       - task: GithubRelease@0
         condition: ne( variables['Agent.OS'], 'Windows_NT' )
         inputs:
@@ -54,10 +54,10 @@ stages:
           target: '$(build.sourceVersion)'
           tagSource: 'manual'
           tag: '$(Build.SourceBranchName)'
-          assets: '$(Build.ArtifactStagingDirectory)/$(crate_name)-$(Build.SourceBranchName)-$(TARGET).tar.gz'
+          assets: '$(Build.ArtifactStagingDirectory)/cobalt.rs.tar.gz'
           title: '$(Build.SourceBranchName)'
           assetUploadMode: 'replace'
-          addChangeLog: true
+          addChangeLog: false
    
 resources:
   repositories:
