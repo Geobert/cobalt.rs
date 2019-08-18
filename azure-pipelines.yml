@@ -1,3 +1,18 @@
+trigger:
+  branches:
+    include: ['master']
+  tags:
+    include: ['v*']
+pr:
+  branches:
+    include:
+    - master
+  paths:
+    exclude:
+    - "*.md"
+    - "docs/*"
+    - "LICENSE-*"
+
 stages:
   - stage: Check
     jobs:
